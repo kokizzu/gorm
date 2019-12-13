@@ -166,7 +166,7 @@ func (s memsql) HasTable(tableName string) bool {
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
 	var name string
 	// allow memsql database name with '-' character
-	if err := s.db.QueryRow("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?", currentDatabase, tableName).Scan(&name); err != nil {
+	if err := s.db.QueryRow("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?", currentDatabase, tableName).Scan(&name); err != nil {
 		if err == sql.ErrNoRows {
 			return false
 		}
@@ -178,7 +178,7 @@ func (s memsql) HasTable(tableName string) bool {
 
 func (s memsql) HasIndex(tableName string, indexName string) bool {
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	if rows, err := s.db.Query("SELECT COUNT(*) FROM INFORMATION_SCHEMA.INDEX_STATISTICS WHERE DATABASE_NAME = ? AND TABLE_NAME = ? AND INDEX_NAME = ?", currentDatabase, tableName, indexName); err != nil {
+	if rows, err := s.db.Query("SELECT index_name FROM INFORMATION_SCHEMA.INDEX_STATISTICS WHERE DATABASE_NAME = ? AND TABLE_NAME = ? AND INDEX_NAME = ?", currentDatabase, tableName, indexName); err != nil {
 		panic(err)
 	} else {
 		defer rows.Close()
@@ -188,7 +188,7 @@ func (s memsql) HasIndex(tableName string, indexName string) bool {
 
 func (s memsql) HasColumn(tableName string, columnName string) bool {
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	if rows, err := s.db.Query("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?", currentDatabase, tableName, columnName); err != nil {
+	if rows, err := s.db.Query("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?", currentDatabase, tableName, columnName); err != nil {
 		panic(err)
 	} else {
 		defer rows.Close()

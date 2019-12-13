@@ -1,8 +1,12 @@
-# GORM
+# GORM for MemSQL
 
 Difference from original `jinzhu/gorm`: 
 * using `uint64` instead of `uint` for ID
-* added support for MemSQL
+* added support for MemSQL, usage:
+
+```
+db, err := gorm.Open(`memsql`, `mysql`, `usr:pwd@host:port/dbname?charset=utf8&parseTime=True&loc=Local`)
+```
 
 The fantastic ORM library for Golang, aims to be developer friendly.
 
